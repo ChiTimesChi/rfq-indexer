@@ -1,66 +1,119 @@
 import { createConfig } from '@ponder/core'
 import { http } from 'viem'
 
-import { InterchainClientV1Abi } from '@/abis/InterchainClientV1Abi'
-import { InterchainDBAbi } from '@/abis/InterchainDBAbi'
+import { FastBridgeV2Abi } from '@/abis/FastBridgeV2'
 import { AddressConfig } from '@/types'
 
-const ethChainId = 11155111
-const arbChainId = 421614
-const avaxChainId = 43113
+// Mainnets
+const ethereumChainId = 1
+const optimismChainId = 10
+const arbitrumChainId = 42161
+const baseChainId = 8453
+const blastChainId = 81457
+const scrollChainId = 534352
+const lineaChainId = 59144
+const bnbChainId = 56
 
 const configByChainId = {
-  local: {
-    [11155111]: {
-      transport: http('http://omnirpc:9001/rpc/11155111'),
-      chainName: 'ethSepoliaAnvil',
-      interchainClientV1Address: '0x5350E98C58e401c2a1cd418CC4D9664a119BBFe5',
-      interchainDBAddress: '0x6438CB36cb18520774EfC7A172410D8BBBe9a428',
-      interchainClientV1StartBlock: 0,
-      interchainDBStartBlock: 0,
-    },
-    [421614]: {
-      transport: http('http://omnirpc:9001/rpc/421614'),
-      chainName: 'arbSepoliaAnvil',
-      interchainClientV1Address: '0x5350E98C58e401c2a1cd418CC4D9664a119BBFe5',
-      interchainDBAddress: '0x6438CB36cb18520774EfC7A172410D8BBBe9a428',
-      interchainClientV1StartBlock: 0,
-      interchainDBStartBlock: 0,
-    },
-    [43113]: {
-      transport: http('http://omnirpc:9001/rpc/43113'),
-      chainName: 'avaxFujiAnvil',
-      interchainClientV1Address: '0x5350E98C58e401c2a1cd418CC4D9664a119BBFe5',
-      interchainDBAddress: '0x6438CB36cb18520774EfC7A172410D8BBBe9a428',
-      interchainClientV1StartBlock: 0,
-      interchainDBStartBlock: 0,
-    },
-    disableCache: true,
-  },
+    local: {
+        [1]: {
+          transport: http('http://omnirpc:9001/rpc/1'),
+          chainName: 'ethereum',
+          FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+          FastBridgeV2StartBlock: 19420718,
+        },
+        [10]: {
+          transport: http('http://omnirpc:9001/rpc/10'),
+          chainName: 'optimism',
+          FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+          FastBridgeV2StartBlock: 117334308,
+        },
+        [42161]: {
+          transport: http('http://omnirpc:9001/rpc/42161'),
+          chainName: 'arbitrum',
+          FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+          FastBridgeV2StartBlock: 189700328,
+        },
+        [8453]: {
+          transport: http('http://omnirpc:9001/rpc/8453'),
+          chainName: 'base',
+          FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+          FastBridgeV2StartBlock: 12478374,
+        },
+        [81457]: {
+          transport: http('http://omnirpc:9001/rpc/81457'),
+          chainName: 'blast',
+          FastBridgeV2Address: '0x34F52752975222d5994C206cE08C1d5B329f24dD',
+          FastBridgeV2StartBlock: 6378234,
+        },
+        [534352]: {
+          transport: http('http://omnirpc:9001/rpc/53452'),
+          chainName: 'scroll',
+          FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+          FastBridgeV2StartBlock: 5357000,
+        },
+        [59144]: {
+          transport: http('http://omnirpc:9001/rpc/59144'),
+          chainName: 'linea',
+          FastBridgeV2Address: '0x34F52752975222d5994C206cE08C1d5B329f24dD',
+          FastBridgeV2StartBlock: 7124666,
+        },
+        [56]: {
+          transport: http('http://omnirpc:9001/rpc/56'),
+          chainName: 'bnb',
+          FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+          FastBridgeV2StartBlock: 40497843,
+        },
+        disableCache: true,
+      },
   testnet: {
-    [11155111]: {
-      transport: http(process.env.ETH_SEPOLIA_RPC),
-      chainName: 'ethSepolia',
-      interchainClientV1Address: '0x588c7Bda9366EEf83EdF67049a1C45f737aFFe0F',
-      interchainDBAddress: '0x2DeF303EA27a3674bb3a5d017e60B2Ef43312A11',
-      interchainClientV1StartBlock: 6015230,
-      interchainDBStartBlock: 6015205,
+    [1]: {
+      transport: http(process.env.ETH_MAINNET_RPC),
+      chainName: 'ethereum',
+      FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+      FastBridgeV2StartBlock: 19420718,
     },
-    [421614]: {
-      transport: http(process.env.ARB_SEPOLIA_RPC),
-      chainName: 'arbSepolia',
-      interchainClientV1Address: '0x7CC23f230f07E983204Ce41E1ee703534445172e',
-      interchainDBAddress: '0x8b455AB9B721887CCb6bA55aB1C4268FF91B0e0D',
-      interchainClientV1StartBlock: 49961080,
-      interchainDBStartBlock: 49960499,
+    [10]: {
+      transport: http(process.env.OPTIMISM_MAINNET_RPC),
+      chainName: 'optimism',
+      FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+      FastBridgeV2StartBlock: 117334308,
     },
-    [43113]: {
-      transport: http(process.env.AVAX_FUJI_RPC),
-      chainName: 'avaxFuji',
-      interchainClientV1Address: '0x188cA7f9615042654e483Ed840582208009A9ADF',
-      interchainDBAddress: '0x11bC9AB4e16bf26A465A6506918888a099BBdBFD',
-      interchainClientV1StartBlock: 34087520,
-      interchainDBStartBlock: 34087520,
+    [42161]: {
+      transport: http(process.env.ARBITRUM_MAINNET_RPC),
+      chainName: 'arbitrum',
+      FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+      FastBridgeV2StartBlock: 189700328,
+    },
+    [8453]: {
+      transport: http(process.env.BASE_MAINNET_RPC),
+      chainName: 'base',
+      FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+      FastBridgeV2StartBlock: 12478374,
+    },
+    [81457]: {
+      transport: http(process.env.BLAST_MAINNET_RPC),
+      chainName: 'blast',
+      FastBridgeV2Address: '0x34F52752975222d5994C206cE08C1d5B329f24dD',
+      FastBridgeV2StartBlock: 6378234,
+    },
+    [534352]: {
+      transport: http(process.env.SCROLL_MAINNET_RPC),
+      chainName: 'scroll',
+      FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+      FastBridgeV2StartBlock: 5357000,
+    },
+    [59144]: {
+      transport: http(process.env.LINEA_MAINNET_RPC),
+      chainName: 'linea',
+      FastBridgeV2Address: '0x34F52752975222d5994C206cE08C1d5B329f24dD',
+      FastBridgeV2StartBlock: 7124666,
+    },
+    [56]: {
+      transport: http(process.env.BNB_MAINNET_RPC),
+      chainName: 'bnb',
+      FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
+      FastBridgeV2StartBlock: 40497843,
     },
     disableCache: false,
   },
@@ -72,101 +125,153 @@ const env =
     : configByChainId.testnet
 
 export const networkDetails = {
-  [ethChainId]: {
-    name: env[ethChainId].chainName,
-    InterchainClientV1: {
-      address: env[ethChainId].interchainClientV1Address,
-      abi: InterchainClientV1Abi,
-      startBlock: env[ethChainId].interchainClientV1StartBlock,
+    [ethereumChainId]: {
+        name: env[ethereumChainId].chainName,
+        FastBridgeV2: {
+            address: env[ethereumChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[ethereumChainId].FastBridgeV2StartBlock,
+        },
     },
-    InterchainDB: {
-      address: env[ethChainId].interchainDBAddress,
-      abi: InterchainDBAbi,
-      startBlock: env[ethChainId].interchainDBStartBlock,
+    [optimismChainId]: {
+        name: env[optimismChainId].chainName,
+        FastBridgeV2: {
+            address: env[optimismChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[optimismChainId].FastBridgeV2StartBlock,
+        },
     },
-  },
-  [arbChainId]: {
-    name: env[arbChainId].chainName,
-    InterchainClientV1: {
-      address: env[arbChainId].interchainClientV1Address,
-      abi: InterchainClientV1Abi,
-      startBlock: env[arbChainId].interchainClientV1StartBlock,
+    [arbitrumChainId]: {
+        name: env[arbitrumChainId].chainName,
+        FastBridgeV2: {
+            address: env[arbitrumChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[arbitrumChainId].FastBridgeV2StartBlock,
+        },
     },
-    InterchainDB: {
-      address: env[arbChainId].interchainDBAddress,
-      abi: InterchainDBAbi,
-      startBlock: env[arbChainId].interchainDBStartBlock,
+    [baseChainId]: {
+        name: env[baseChainId].chainName,
+        FastBridgeV2: {
+            address: env[baseChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[baseChainId].FastBridgeV2StartBlock,
+        },
     },
-  },
-  [avaxChainId]: {
-    name: env[avaxChainId].chainName,
-    InterchainClientV1: {
-      address: env[avaxChainId].interchainClientV1Address,
-      abi: InterchainClientV1Abi,
-      startBlock: env[avaxChainId].interchainClientV1StartBlock,
+    [blastChainId]: {
+        name: env[blastChainId].chainName,
+        FastBridgeV2: {
+            address: env[blastChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[blastChainId].FastBridgeV2StartBlock,
+        },
     },
-    InterchainDB: {
-      address: env[avaxChainId].interchainDBAddress,
-      abi: InterchainDBAbi,
-      startBlock: env[avaxChainId].interchainDBStartBlock,
+    [scrollChainId]: {
+        name: env[scrollChainId].chainName,
+        FastBridgeV2: {
+            address: env[scrollChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[scrollChainId].FastBridgeV2StartBlock,
+        },
     },
-  },
+    [lineaChainId]: {
+        name: env[lineaChainId].chainName,
+        FastBridgeV2: {
+            address: env[lineaChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[lineaChainId].FastBridgeV2StartBlock,
+        },
+    },
+    [bnbChainId]: {
+        name: env[bnbChainId].chainName,
+        FastBridgeV2: {
+            address: env[bnbChainId].FastBridgeV2Address,
+            abi: FastBridgeV2Abi,
+            startBlock: env[bnbChainId].FastBridgeV2StartBlock,
+        },
+    },
 } as Record<number, AddressConfig>
 
 const config = createConfig({
-  networks: {
-    [env[ethChainId].chainName]: {
-      chainId: ethChainId,
-      transport: env[ethChainId].transport,
-      disableCache: env.disableCache,
-    },
-    [env[arbChainId].chainName]: {
-      chainId: arbChainId,
-      transport: env[arbChainId].transport,
-      disableCache: env.disableCache,
-    },
-    [env[avaxChainId].chainName]: {
-      chainId: avaxChainId,
-      transport: env[avaxChainId].transport,
-      disableCache: env.disableCache,
-    },
-  },
+    networks: {
+        [env[ethereumChainId].chainName]: {
+          chainId: ethereumChainId,
+          transport: env[ethereumChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[optimismChainId].chainName]: {
+          chainId: optimismChainId,
+          transport: env[optimismChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[arbitrumChainId].chainName]: {
+          chainId: arbitrumChainId,
+          transport: env[arbitrumChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[baseChainId].chainName]: {
+          chainId: baseChainId,
+          transport: env[baseChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[blastChainId].chainName]: {
+          chainId: blastChainId,
+          transport: env[blastChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[scrollChainId].chainName]: {
+          chainId: scrollChainId,
+          transport: env[scrollChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[lineaChainId].chainName]: {
+          chainId: lineaChainId,
+          transport: env[lineaChainId].transport,
+          disableCache: env.disableCache,
+        },
+        [env[bnbChainId].chainName]: {
+          chainId: bnbChainId,
+          transport: env[bnbChainId].transport,
+          disableCache: env.disableCache,
+        },
+      },
   contracts: {
-    InterchainClientV1: {
-      network: {
-        [env[ethChainId].chainName]: {
-          address: networkDetails[ethChainId]?.InterchainClientV1.address,
-          startBlock: networkDetails[ethChainId]?.InterchainClientV1.startBlock,
+    FastBridgeV2: {
+        network: {
+          [env[ethereumChainId].chainName]: {
+            address: networkDetails[ethereumChainId].FastBridgeV2.address,
+            startBlock: networkDetails[ethereumChainId].FastBridgeV2.startBlock,
+          },
+          [env[optimismChainId].chainName]: {
+            address: networkDetails[optimismChainId].FastBridgeV2.address,
+            startBlock: networkDetails[optimismChainId].FastBridgeV2.startBlock,
+          },
+          [env[arbitrumChainId].chainName]: {
+            address: networkDetails[arbitrumChainId].FastBridgeV2.address,
+            startBlock: networkDetails[arbitrumChainId].FastBridgeV2.startBlock,
+          },
+          [env[baseChainId].chainName]: {
+            address: networkDetails[baseChainId].FastBridgeV2.address,
+            startBlock: networkDetails[baseChainId].FastBridgeV2.startBlock,
+          },
+          [env[blastChainId].chainName]: {
+            address: networkDetails[blastChainId].FastBridgeV2.address,
+            startBlock: networkDetails[blastChainId].FastBridgeV2.startBlock,
+          },
+          [env[scrollChainId].chainName]: {
+            address: networkDetails[scrollChainId].FastBridgeV2.address,
+            startBlock: networkDetails[scrollChainId].FastBridgeV2.startBlock,
+          },
+          [env[lineaChainId].chainName]: {
+            address: networkDetails[lineaChainId].FastBridgeV2.address,
+            startBlock: networkDetails[lineaChainId].FastBridgeV2.startBlock,
+          },
+          [env[bnbChainId].chainName]: {
+            address: networkDetails[bnbChainId].FastBridgeV2.address,
+            startBlock: networkDetails[bnbChainId].FastBridgeV2.startBlock,
+          },
         },
-        [env[arbChainId].chainName]: {
-          address: networkDetails[arbChainId]?.InterchainClientV1.address,
-          startBlock: networkDetails[arbChainId]?.InterchainClientV1.startBlock,
-        },
-        [env[avaxChainId].chainName]: {
-          address: networkDetails[avaxChainId]?.InterchainClientV1.address,
-          startBlock:
-            networkDetails[avaxChainId]?.InterchainClientV1.startBlock,
-        },
+        abi: FastBridgeV2Abi,
       },
-      abi: InterchainClientV1Abi,
-    },
-    InterchainDB: {
-      network: {
-        [env[ethChainId].chainName]: {
-          address: networkDetails[ethChainId]?.InterchainDB.address,
-          startBlock: networkDetails[ethChainId]?.InterchainDB.startBlock,
-        },
-        [env[arbChainId].chainName]: {
-          address: networkDetails[arbChainId]?.InterchainDB.address,
-          startBlock: networkDetails[arbChainId]?.InterchainDB.startBlock,
-        },
-        [env[avaxChainId].chainName]: {
-          address: networkDetails[avaxChainId]?.InterchainDB.address,
-          startBlock: networkDetails[avaxChainId]?.InterchainDB.startBlock,
-        },
-      },
-      abi: InterchainDBAbi,
-    },
   },
 })
 

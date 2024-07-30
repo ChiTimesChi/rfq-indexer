@@ -1,4 +1,4 @@
-export const FastBridgeV2 = [
+export const FastBridgeV2Abi = [
     {
       inputs: [
         { internalType: 'address', name: '_owner', type: 'address' },
