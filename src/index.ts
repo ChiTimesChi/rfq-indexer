@@ -1,115 +1,151 @@
-import { type Address, trim } from 'viem'
+import { trim } from 'viem'
+
 
 import { ponder } from '@/generated'
-import { networkDetails } from '@/ponder.config'
-import { generateEntryId } from '@/utils/generateEntryId'
+import { formatAmount } from './utils/formatAmount'
+import { getChainName } from './utils/chains'
 
 /* ORIGIN CHAIN EVENTS */
-
-
-// FastBridge V2 Events
   
-  ponder.on('FastBridgeV2:BridgeRequested', async ({ event, context }) => {
+ponder.on('FastBridgeV2:BridgeRequested', async ({ event, context }) => {
+  const {
+    db: { BridgeRequestEvents },
+    network: { chainId },
+  } = context
+
+  const {
+    args: {
+      transactionId,
+      sender,
+      destChainId,
+      originToken,
+      destToken,
+      originAmount,
+      destAmount,
+      sendChainGas,
+    },
+    block: { timestamp },
+    transaction: { hash },
+    log: { blockNumber },
+  } = event
+
+  await BridgeRequestEvents.create({
+    id: transactionId,
+    data: {
+      transactionId,
+      sender: trim(sender),
+      originChainId: Number(chainId),
+      originChain: getChainName(Number(chainId)),
+      destChainId: Number(destChainId),
+      destChain: getChainName(Number(destChainId)),
+      originToken: trim(originToken),
+      destToken: trim(destToken),
+      originAmount,
+      originAmountFormatted: BigInt(formatAmount(originAmount, originToken)), 
+      destAmount,
+      destAmountFormatted: BigInt(formatAmount(destAmount, destToken)),
+      sendChainGas,
+      blockNumber: BigInt(blockNumber),
+      blockTimestamp: Number(timestamp),
+      transactionHash: hash,
+    },
+  })
+})
+  
+ponder.on('FastBridgeV2:BridgeDepositRefunded', async ({ event, context }) => {
     const {
-      args: {
+        args: { transactionId, to, token, amount },
+        block: { timestamp },
+        transaction: { hash },
+        log: { blockNumber },
+    } = event
+
+    const {
+        db: { BridgeDepositRefundedEvents },
+        network: { chainId },
+      } = context
+
+    await BridgeDepositRefundedEvents.create({
+      id: transactionId,
+      data: {
         transactionId,
-        sender,
-        request,
-        destChainId,
-        originToken,
-        destToken,
-        originAmount,
-        destAmount,
-        sendChainGas,
+        to: trim(to),
+        token: trim(token),
+        amount,
+        amountFormatted: BigInt(formatAmount(amount,token)),
+        blockNumber: BigInt(blockNumber),
+        blockTimestamp: Number(timestamp),
+        transactionHash: hash,
+        originChainId: chainId,
+        originChain: getChainName(Number(chainId))
       },
-      block: { timestamp },
-      transaction: { hash },
-    } = event
-  
-    // TODO: Create database entry
-    // await context.db.BridgeRequest.create({
-    //   id: transactionId,
-    //   data: {
-    //     sender: trim(sender),
-    //     request,
-    //     destChainId: Number(destChainId),
-    //     originToken: trim(originToken),
-    //     destToken: trim(destToken),
-    //     originAmount,
-    //     destAmount,
-    //     sendChainGas,
-    //     timestamp: Number(timestamp),
-    //     transactionHash: hash,
-    //   },
-    // })
-  })
-  
-  ponder.on('FastBridgeV2:BridgeDepositRefunded', async ({ event, context }) => {
-    const {
-      args: { transactionId, to, token, amount },
-      block: { timestamp },
-      transaction: { hash },
-    } = event
-  
-    // TODO: Create database entry or update existing entry
-    // await context.db.BridgeRefund.create({
-    //   id: transactionId,
-    //   data: {
-    //     recipient: trim(to),
-    //     token: trim(token),
-    //     amount,
-    //     timestamp: Number(timestamp),
-    //     transactionHash: hash,
-    //   },
-    // })
-  })
-  
-  ponder.on('FastBridgeV2:BridgeProofProvided', async ({ event, context }) => {
-    const {
-      args: { transactionId, relayer, transactionHash },
-      block: { timestamp },
-      transaction: { hash },
-    } = event
-  
-    // TODO: Create database entry or update existing entry
-    // await context.db.BridgeProof.create({
-    //   id: transactionId,
-    //   data: {
-    //     relayer: trim(relayer),
-    //     proofTransactionHash: transactionHash,
-    //     timestamp: Number(timestamp),
-    //     transactionHash: hash,
-    //   },
-    // })
-  })
-  
-  ponder.on('FastBridgeV2:BridgeDepositClaimed', async ({ event, context }) => {
-    const {
-      args: { transactionId, relayer, to, token, amount },
-      block: { timestamp },
-      transaction: { hash },
-    } = event
-  
-    // TODO: Create database entry or update existing entry
-    // await context.db.BridgeClaim.create({
-    //   id: transactionId,
-    //   data: {
-    //     relayer: trim(relayer),
-    //     recipient: trim(to),
-    //     token: trim(token),
-    //     amount,
-    //     timestamp: Number(timestamp),
-    //     transactionHash: hash,
-    //   },
-    // })
-  })
+    })
+})
 
-  /* DESTINATION CHAIN EVENTS */
+ponder.on('FastBridgeV2:BridgeProofProvided', async ({ event, context }) => {
+    const {
+        args: { transactionId, relayer },
+        block: { timestamp },
+        transaction: { hash },
+        log: { address, blockNumber }, // may want to add address here eventually
+    } = event
+
+    const {
+        db: { BridgeProofProvidedEvents },
+        network: { chainId },
+      } = context
+
+    await BridgeProofProvidedEvents.create({
+      id: transactionId,
+      data: {
+        transactionId,
+        relayer: trim(relayer),
+        originChainId: chainId, 
+        originChain: getChainName(Number(chainId)),
+        blockNumber: BigInt(blockNumber),
+        blockTimestamp: Number(timestamp),
+        transactionHash: hash,
+      },
+    })
+})
+
+ponder.on('FastBridgeV2:BridgeDepositClaimed', async ({ event, context }) => {
+    const {
+        args: { transactionId, relayer, to, token, amount },
+        block: { timestamp },
+        transaction: { hash },
+        log: { blockNumber },
+    } = event
+
+    const {
+        db: { BridgeDepositClaimedEvents },
+        network: { chainId },
+      } = context
+
+    await BridgeDepositClaimedEvents.create({
+      id: transactionId,
+      data: {
+        transactionId,
+        relayer: trim(relayer),
+        to: trim(to),
+        token: trim(token),
+        amount,
+        amountFormatted: BigInt(formatAmount(amount, token)),
+        originChainId: chainId, 
+        originChain: getChainName(Number(chainId)),
+        blockNumber: BigInt(blockNumber),
+        blockTimestamp: Number(timestamp),
+        transactionHash: hash,
+      },
+    })
+})
+
+/* DESTINATION CHAIN EVENTS */
 
 
-  ponder.on('FastBridgeV2:BridgeRelayed', async ({ event, context }) => {
+ponder.on('FastBridgeV2:BridgeRelayed', async ({ event, context }) => {
     const {
-      args: {
+        args: {
         transactionId,
         relayer,
         to,
@@ -118,28 +154,36 @@ import { generateEntryId } from '@/utils/generateEntryId'
         destToken,
         originAmount,
         destAmount,
-        chainGasAmount,
-      },
-      block: { timestamp },
-      transaction: { hash },
+        },
+        block: { timestamp },
+        transaction: { hash },
+        log: { blockNumber },
     } = event
-  
-    // TODO: Create or update database entry
-    // await context.db.BridgeRelay.create({
-    //   id: transactionId,
-    //   data: {
-    //     relayer: trim(relayer),
-    //     recipient: trim(to),
-    //     originChainId: Number(originChainId),
-    //     originToken: trim(originToken),
-    //     destToken: trim(destToken),
-    //     originAmount,
-    //     destAmount,
-    //     chainGasAmount,
-    //     timestamp: Number(timestamp),
-    //     transactionHash: hash,
-    //   },
-    // })
-  })
-  
-  // ... existing code ...
+
+    const {
+        db: { BridgeRelayedEvents },
+        network: { chainId },
+      } = context
+
+    await BridgeRelayedEvents.create({
+      id: transactionId,
+      data: {
+        transactionId,
+        relayer: trim(relayer),
+        to: trim(to),
+        originChainId: Number(originChainId),
+        originChain: getChainName(Number(originChainId)),
+        destChainId: Number(chainId),
+        destChain: getChainName(Number(chainId)),
+        originToken: trim(originToken),
+        destToken: trim(destToken),
+        originAmount,
+        originAmountFormatted: BigInt(formatAmount(originAmount, originToken)), 
+        destAmount,
+        destAmountFormatted: BigInt(formatAmount(destAmount, destToken)),
+        blockNumber: BigInt(blockNumber),
+        blockTimestamp: Number(timestamp),
+        transactionHash: hash,
+      },
+    })
+})

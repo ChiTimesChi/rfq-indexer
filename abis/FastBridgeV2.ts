@@ -640,4 +640,4 @@ export const FastBridgeV2Abi = [
       stateMutability: 'nonpayable',
       type: 'function',
     },
-  ]
+  ] as const 
