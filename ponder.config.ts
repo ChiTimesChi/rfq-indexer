@@ -154,32 +154,32 @@ const config = createConfig({
         [configByChainId[arbitrumChainId].chainName]: {
           chainId: arbitrumChainId,
           transport: configByChainId[arbitrumChainId].transport,
-          disableCache: configByChainId.disableCache,
+        //   disableCache: configByChainId.disableCache,
         },
         [configByChainId[baseChainId].chainName]: {
           chainId: baseChainId,
           transport: configByChainId[baseChainId].transport,
-          disableCache: configByChainId.disableCache,
+        //   disableCache: configByChainId.disableCache,
         },
         [configByChainId[blastChainId].chainName]: {
           chainId: blastChainId,
           transport: configByChainId[blastChainId].transport,
-          disableCache: configByChainId.disableCache,
+        //   disableCache: configByChainId.disableCache,
         },
         [configByChainId[scrollChainId].chainName]: {
           chainId: scrollChainId,
           transport: configByChainId[scrollChainId].transport,
-          disableCache: configByChainId.disableCache,
+        //   disableCache: configByChainId.disableCache,
         },
         [configByChainId[lineaChainId].chainName]: {
           chainId: lineaChainId,
           transport: configByChainId[lineaChainId].transport,
-          disableCache: configByChainId.disableCache,
+        //   disableCache: configByChainId.disableCache,
         },
         [configByChainId[bnbChainId].chainName]: {
           chainId: bnbChainId,
           transport: configByChainId[bnbChainId].transport,
-          disableCache: configByChainId.disableCache,
+        //   disableCache: configByChainId.disableCache,
         },
       },
   contracts: {
