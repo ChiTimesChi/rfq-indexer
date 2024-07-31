@@ -58,13 +58,13 @@ const configByChainId = {
         //   FastBridgeV2StartBlock: 7941653, new block
         // },
         [59144]: {
-          transport: http('https://rpc.linea.build'),
+          transport: http(process.env.LINEA_MAINNET_RPC),
           chainName: 'linea',
           FastBridgeV2Address: '0x34F52752975222d5994C206cE08C1d5B329f24dD',
           FastBridgeV2StartBlock: 7124666, // first block and new block
         },
         [56]: {
-          transport: http('https://dark-quaint-energy.bsc.quiknode.pro/b76d659496d2b327e85da8ddf89722cd5f7cf038'),
+          transport: http(process.env.BNB_MAINNET_RPC),
           chainName: 'bnb',
           FastBridgeV2Address: '0x5523D3c98809DdDB82C686E152F5C58B1B0fB59E',
           FastBridgeV2StartBlock: 40497843, // first block and new block 
