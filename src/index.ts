@@ -95,9 +95,10 @@ ponder.on('FastBridgeV2:BridgeProofProvided', async ({ event, context }) => {
         network: { chainId },
       } = context
 
-    await BridgeProofProvidedEvents.create({
+    await BridgeProofProvidedEvents.upsert({
       id: transactionId,
-      data: {
+      // Save the full data first time we index this event
+      create: {
         transactionId,
         relayer: trim(relayer),
         originChainId: chainId, 
@@ -106,6 +107,13 @@ ponder.on('FastBridgeV2:BridgeProofProvided', async ({ event, context }) => {
         blockTimestamp: Number(timestamp),
         transactionHash: hash,
       },
+      // Update the data with the latest event data on subsequent indexes
+      update: {
+        relayer: trim(relayer),
+        blockNumber: BigInt(blockNumber),
+        blockTimestamp: Number(timestamp),
+        transactionHash: hash,
+      }
     })
 })
 
